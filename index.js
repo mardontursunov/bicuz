@@ -1,15 +1,16 @@
 const TelegramBot = require('node-telegram-bot-api')
-const TOKEN = '5084527656:AAHMTseZlDQAywkVB5p1gqp8-dQx-_54_2o'
+const TOKEN = '5151644655:AAFHcJ7rtumgjuwV90zBVwTXVbuNU1jWJfo'
 const { findUser, createUser, changeStep, setDistrict, setName, setCourse, setNumber, findAll, setTitle } = require('./model')
 
 const bot = new TelegramBot(TOKEN, {
     polling: true
 })
 
-// -689678881
+// -708031241
 
 bot.on('message', async (message) => {
-    if(message.chat.id != -689678881) {
+
+    if(message.chat.id != -708031241) {
         const chat_id = message.chat.id
         const name = message.from.name
         const text = message.text
@@ -49,14 +50,14 @@ bot.on('message', async (message) => {
             }
         } else if(user.step == 3) {
 
-            if(text == '/obunachilar' && (message.from.id == 999934996 || message.from.id == 813828910 || message.from.id == 1886330872)) {
+            if(text == '/obunachilar' && (message.from.id == 999934996 || message.from.id == 813828910 || message.from.id == 895933593)) {
                 let users = await findAll()
                 await bot.sendMessage(chat_id, `Botga obuna bo'lganlar: <b>${users.length} ta</b>`, {
                     parse_mode: "HTML"
                 })
             } else if(message.text != '/xabar') {
                     await bot.sendMessage(chat_id, "Siz ro'yxatdan o'tgansiz!")
-            } else if(text == '/xabar' && (message.from.id == 999934996 || message.from.id == 813828910 || message.from.id == 1886330872)) {
+            } else if(text == '/xabar' && (message.from.id == 999934996 || message.from.id == 813828910 || message.from.id == 895933593)) {
                 await bot.sendMessage(message.chat.id, `1. Reklama sarlavhasi oddiy shaklda yozing.
                 
 2. Reklama xabarini forward qilib yuboring!`, {
@@ -124,11 +125,12 @@ ${message.caption}`,
 
 bot.on('contact', async (data) => {
     let user = await findUser(data.contact.user_id)
+
     await setNumber(user.chat_id, data.contact.phone_number)
     
     if(user.step == 2) {
-        await bot.sendMessage(-689678881, `👤 Ismi: <b>${user.name}</b>
-☎️ Telefon raqam: <b>+${String(data.contact.phone_number)}</b>`, {
+        await bot.sendMessage(-708031241, `👤 Ismi: <b>${user.name}</b>
+☎️ Telefon raqam: <b>${String(data.contact.phone_number)}</b>`, {
             parse_mode: "HTML"
         })
         await bot.sendPhoto(user.chat_id, "./photo_2021-12-21_07-54-49.jpg", {
