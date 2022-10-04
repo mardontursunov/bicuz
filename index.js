@@ -1,16 +1,15 @@
 const TelegramBot = require('node-telegram-bot-api')
-const TOKEN = '5151644655:AAFHcJ7rtumgjuwV90zBVwTXVbuNU1jWJfo'
+const TOKEN = '5694161761:AAHfWkatfUqCo1xC1NNMTzEgH6i9NbqCwOA'
 const { findUser, createUser, changeStep, setDistrict, setName, setCourse, setNumber, findAll, setTitle } = require('./model')
 
 const bot = new TelegramBot(TOKEN, {
     polling: true
 })
 
-// -708031241
+// -715493396
 
 bot.on('message', async (message) => {
-
-    if(message.chat.id != -708031241) {
+    if(message.chat.id != -715493396) {
         const chat_id = message.chat.id
         const name = message.from.name
         const text = message.text
@@ -50,14 +49,14 @@ bot.on('message', async (message) => {
             }
         } else if(user.step == 3) {
 
-            if(text == '/obunachilar' && (message.from.id == 999934996 || message.from.id == 813828910 || message.from.id == 895933593)) {
+            if(text == '/obunachilar' && (message.from.id == 999934996)) {
                 let users = await findAll()
                 await bot.sendMessage(chat_id, `Botga obuna bo'lganlar: <b>${users.length} ta</b>`, {
                     parse_mode: "HTML"
                 })
             } else if(message.text != '/xabar') {
                     await bot.sendMessage(chat_id, "Siz ro'yxatdan o'tgansiz!")
-            } else if(text == '/xabar' && (message.from.id == 999934996 || message.from.id == 813828910 || message.from.id == 895933593)) {
+            } else if(text == '/xabar' && (message.from.id == 999934996)) {
                 await bot.sendMessage(message.chat.id, `1. Reklama sarlavhasi oddiy shaklda yozing.
                 
 2. Reklama xabarini forward qilib yuboring!`, {
@@ -90,13 +89,13 @@ bot.on('message', async (message) => {
                     try {
                         count += 1
                         if(message.reply_markup) {
-                            await bot.copyMessage(users[i].chat_id, -1001556881748, message.forward_from_message_id, {
+                            await bot.copyMessage(users[i].chat_id, -1001801747698, message.forward_from_message_id, {
                                 reply_markup: message.reply_markup,
                                 caption: `${user.title} ${users[i].name}
 ${message.caption}`,
                             })
                         } else {
-                            await bot.copyMessage(users[i].chat_id, -1001556881748, message.forward_from_message_id, {
+                            await bot.copyMessage(users[i].chat_id, -1001801747698, message.forward_from_message_id, {
                                 caption: `${user.title} <b>${users[i].name}</b>
                                 
 ${message.caption}`,
@@ -114,7 +113,17 @@ ${message.caption}`,
                 })
                 
                 await bot.sendMessage(message.chat.id, `<b>Bloklaganlar:</b> ${errorCount}`, {
-                    parse_mode: "HTML"
+                    parse_mode: "HTML",
+                    reply_markup: {
+                        inline_keyboard: [
+                            [
+                                {
+                                    text: "Ortga",
+                                    callback_data: "back"
+                                }
+                            ]
+                        ]
+                    }
                 })
 
             }, interval)
@@ -125,18 +134,16 @@ ${message.caption}`,
 
 bot.on('contact', async (data) => {
     let user = await findUser(data.contact.user_id)
-
-    await setNumber(user.chat_id, data.contact.phone_number)
-    
+        setNumber(user.chat_id, data.contact.phone_number)
     if(user.step == 2) {
-        await bot.sendMessage(-708031241, `👤 Ismi: <b>${user.name}</b>
+        await bot.sendMessage(-715493396, `👤 Ismi: <b>${user.name}</b>
 ☎️ Telefon raqam: <b>${String(data.contact.phone_number)}</b>`, {
             parse_mode: "HTML"
         })
-        await bot.sendPhoto(user.chat_id, "./photo_2021-12-21_07-54-49.jpg", {
+        await bot.sendPhoto(user.chat_id, "./notif-img.jpeg", {
             caption: `Hurmatli <b>${user.name}</b>
             
-<b>,,Business Invest”</b> kompaniyasining rasmiy botiga muvaffaqiyatli obuna bo’ldingiz✅`,
+<b>Notif.uz</b> kompaniyasining rasmiy ro'yxatdan o'tkazuvchi botiga muvaffaqiyatli obuna bo’ldingiz✅`,
             parse_mode: "HTML"
         })
         await changeStep(user.chat_id, 3)
